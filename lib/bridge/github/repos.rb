@@ -3,11 +3,13 @@ class Huboard
   module Repos
 
     def repos(org = nil)
+      if !@repos
+        repos = org.nil? ? connection.user.repos.all : connection.orgs(org).repos.all
 
-      repos = org.nil? ? connection.user.repos.all : connection.orgs(org).repos.all
-
-      repos.reject { |r| !r.has_issues }.sort_by{|r| r["pushed_at"] || "1111111111111111"}.reverse
-
+        repos = repos.reject { |r| !r.has_issues }.sort_by{|r| r["pushed_at"] || "1111111111111111"}.reverse
+        @repos = repos
+      end
+      @repos
     end
 
     def all_repos

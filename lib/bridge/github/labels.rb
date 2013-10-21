@@ -1,10 +1,14 @@
+      require 'debugger'
 class Huboard
 
   module Labels
 
     def labels
-      labels = gh.labels
-      labels.is_a?(Array) ? labels : []
+      if !@labels
+        labels = gh.labels
+        @labels = labels.is_a?(Array) ? labels : []
+      end
+      @labels
     end
 
     def other_labels
@@ -16,7 +20,7 @@ class Huboard
     end
 
     def column_labels
-      columns = labels.select{|l| Huboard.column_pattern.match l.name }.map do |l| 
+      columns = labels.select{|l| Huboard.column_pattern.match l.name }.map do |l|
         match = Huboard.column_pattern.match l.name
           l[:index] = match[:id]
           l[:text] = match[:name]
@@ -36,5 +40,5 @@ class Huboard
     end
 
   end
-  
+
 end
